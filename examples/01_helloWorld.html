@@ -1,10 +1,143 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Hello World</title>
-</head>
-<body>
   <script src="../pixi.js/bin/pixi.js"></script>
+</head>
+
+<body>
+  <script>
+    var type = "wWEBGL"
+    if (!PIXI.utils.isWebGLSupported()) {
+      type = 'canvas'
+    }
+    //****************************设置别名********************
+    var Container = PIXI.Container,
+      autoDetectRenderer = PIXI.autoDetectRenderer,
+      loader = PIXI.loader,
+      resources = PIXI.loader.resources,
+      Sprite = PIXI.Sprite,
+      Rectangle = PIXI.Rectangle
+
+    //******************************************************
+    PIXI.utils.sayHello(type)
+    var renderer = autoDetectRenderer(256, 256)
+    renderer.backgroundColor = 0xdddddd
+    renderer.autoResize = true
+    renderer.resize(512, 512)
+    // renderer.view 是一个canvas对象
+    document.body.appendChild(renderer.view)
+
+    var stage = new PIXI.Container()
+
+    renderer.render(stage)
+    /**********************************/
+    //Loader 加载图片纹理: loader加载图片， ->  转化为gpu支持的 texture， -> stage添加图片 -> renderer渲染stage
+    loader.add('images/blob.png').load(setup)
+    function setup() {
+      var cat = new Sprite(resources["images/blob.png"].texture)
+      // 设置位置
+
+      // cat.x = 90
+      // cat.y = 100
+      cat.position.set(100, 100)
+      // 设置大小
+      cat.width = 100
+      cat.height = 100
+
+      // 设置scale
+      // cat.scale.x = 1
+      // cat.scale.y = 1
+      cat.scale.set(4, 4)
+
+      // 设定旋转中心 -> 旋转
+      cat.anchor.x = 0.5
+      cat.anchor.y = 0.5
+
+      cat.rotation = Math.PI
+
+      stage.addChild(cat)
+      renderer.render(stage)
+    }
+
+    // 添加雪碧图, 可使用 Texture packer制作雪碧图和json文件
+    loader.add('images/tileset.png').load(handleTileset)
+    function handleTileset() {
+      var texture = resources['images/tileset.png'].texture
+      var rect = new Rectangle(192, 128, 64, 64)
+      texture.frame = rect
+      var rocket = new Sprite(texture)
+      rocket.position.set(200, 40)
+      stage.addChild(rocket)
+      renderer.render(stage)
+    }
+
+    // 批量加载雪碧图  textture atlas
+    loader.add('images/treasureHunter.json').load(handleAltas)
+    function handleAltas() {
+      // 获取texture三种方法
+      // 方法1
+      // var texture = PIXI.utils.TextureCache['blob.png'].texture
+      // 方法2
+      // var texture = resources['images/blob.png'].texture
+      // 方法3
+      // var texture = resources['images/myTexure.json'].textures['dungeon.png']
+
+      var id = resources['images/treasureHunter.json'].textures
+      // 加载背景
+      var dungeon = new Sprite(id['dungeon.png'])
+      stage.addChild(dungeon)
+      // 加载explorer
+      var explorer = new Sprite(id['explorer.png'])
+      explorer.x = 68
+      explorer.y = stage.height / 2 - explorer.height / 2
+      stage.addChild(explorer)
+      // 加载 treasure
+      var treasure = new Sprite(id['treasure.png'])
+      treasure.x = stage.width - treasure.width - 48
+      treasure.y = stage.height / 2 - treasure.height / 2
+      stage.addChild(treasure)
+      // 加载 door.png
+      var door = new Sprite(id['door.png'])
+      door.position.set(32, 0)
+      stage.addChild(door)
+      // 生成更多blob
+      var numberOfBlobs = 6,
+        spacing = 48,
+        xOffset = 150;
+      for (var i = 0; i < numberOfBlobs; i++) {
+        var blob = new Sprite(id['blob.png'])
+        //Make a blob
+        var blob = new Sprite(id["blob.png"]);
+
+        //Space each blob horizontally according to the `spacing` value.
+        //`xOffset` determines the point from the left of the screen
+        //at which the first blob should be added.
+        var x = spacing * i + xOffset;
+
+        //Give the blob a random y position
+        //(`randomInt` is a custom function - see below)
+        var y = randomInt(0, stage.height - blob.height);
+
+        //Set the blob's position
+        blob.x = x;
+        blob.y = y;
+
+        //Add the blob sprite to the stage
+        stage.addChild(blob);
+      }
+
+
+      renderer.render(stage)
+    }
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+
+  </script>
 </body>
+
 </html>

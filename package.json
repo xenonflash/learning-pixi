@@ -1,0 +1,26 @@
+{
+  "name": "learningpixi",
+  "version": "1.0.0",
+  "description": "Learning Pixi =============",
+  "main": "pixi.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "browser-sync start --server --directory './examples' --files '*/**.html'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kittykatattack/learningPixi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kittykatattack/learningPixi/issues"
+  },
+  "homepage": "https://github.com/kittykatattack/learningPixi#readme",
+  "devDependencies": {
+    "pixi.js": "4.0.0"
+  }
+}
